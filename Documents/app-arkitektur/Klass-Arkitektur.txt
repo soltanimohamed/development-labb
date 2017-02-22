@@ -1,0 +1,29 @@
+Class Movie:
+-id:          int.
+-title:       String.
+-genre:       String.
+------------------------
++toString().
++compareTo().
++(uppdate()).
+-----------------------------------------------------------------------------------------------------------------
+
+Class Actor:
+-id:   int.
+-name: String.
+-----------------------
++toString().
++compareTo().
++(uppdate()).
+------------------------------------------------------------------------------------------------------------------
+
+Interface Storage:
++addMovie().
++addActor().
++deleteMovie().
++delateActor().
++showAllMovies().
++getByNameMovie().
+-----------------------------------------------------------------------------------------------------------------
+
+Class DBStorage implemets Storage
