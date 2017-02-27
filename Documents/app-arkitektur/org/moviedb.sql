@@ -1,4 +1,4 @@
-PRAGMA foreign keys=OFF;
+PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE movies(movie_id INTEGER PRIMARY KEY NOT NULL, title TEXT,
 genre TEXT);
