@@ -65,6 +65,20 @@ public class DBStorage implements Storage{
     }
    return allMovies;
   }
+  public List<Actor> showAllActors(){
+    List<Actor> allActors = new ArrayList<>();
+    try{
+      String sql = "SELECT name, sex FROM actors";
+      ResultSet rs = con.createStatement().executeQuery(sql);
+      while(rs.next()){
+        Actor a = new Actor(rs.getString("name") , rs.getString("sex"));
+        allActors.add(a);
+      }
+    }catch(Exception e){
+      System.err.println("Error: " + e.getMessage());
+    }
+   return allActors;
+  }
   public List<Movie> getMoviesByActorName(String actorName){
     List<Movie> moviesByActor = new ArrayList<>();
     try{
@@ -139,5 +153,26 @@ public class DBStorage implements Storage{
     }catch(SQLException e){
       System.err.println("Error " + e.getMessage());
     }
+  }
+  public int inlogg(String username, String password){
+    int result = 0;
+    try{
+      String sql="SELECT admin_id FROM admins WHERE username='" + username+
+      "' AND password='" + password + "'";
+      ResultSet rs = con.createStatement().executeQuery(sql);
+      if(rs.next()){
+      result = rs.getInt("admin_id");
+        //System.out.println(result);
+    /*  }
+      else{
+        result = false;
+        System.out.println(result);
+      } */
+      }
+    }catch(SQLException|NullPointerException e){
+      //System.err.println("Error :" + e.getMessage());
+      System.err.println("there is an err");
+    }
+    return result;
   }
 }

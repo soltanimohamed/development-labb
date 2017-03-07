@@ -6,6 +6,8 @@ public interface Storage{
   public void deleteMovie(String title);
   public void deleteActor(String name);
   public List<Movie> showAllMovies();
+  public List<Actor> showAllActors();
   public List<Movie> getMoviesByActorName(String actorName);
   public List<Actor> getActorsByMovieTitle(String title);
+  public int inlogg(String username, String password);
 }
