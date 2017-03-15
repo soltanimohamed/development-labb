@@ -290,8 +290,14 @@ public class MainWindow extends Application{
   private void getEditMenuItem(String name, Storage storage){
 
     if (name.equals("MOVIE")) {
+
       addMovie = new MenuItem("Add new movie...");
       addMovie.setDisable(true);
+      addMovie.setOnAction( e ->{
+        new AddMovie(storage);
+      });
+      addMovie.setDisable(true);
+
       deleteMovie = new MenuItem("Delete movie...");
       deleteMovie.setOnAction( e -> {
         new DeleteEntryView(storage, name);
@@ -300,6 +306,10 @@ public class MainWindow extends Application{
     }else{
       addActor = new MenuItem("Add new actor...");
       addActor.setDisable(true);
+      addActor.setOnAction( e ->{
+        new AddActor(storage);
+      });
+            
       deleteActor = new MenuItem("Delete actor");
       deleteActor.setOnAction( e ->{
         new DeleteEntryView(storage, name);
