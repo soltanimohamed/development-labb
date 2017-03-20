@@ -32,8 +32,8 @@ public class SignIn{
       if((userField.getText().equals("")) || (passField.getText().equals(""))){
         Alerts.display("Alert","Please enter username and password");}
         else{
-          storage.inlogg(userField.getText(), passField.getText());
-          if(storage.inlogg(userField.getText(), passField.getText()) != 0){
+          storage.logIn(userField.getText(), passField.getText());
+          if(storage.logIn(userField.getText(), passField.getText()) != 0){
             window.close();
           }
           else{

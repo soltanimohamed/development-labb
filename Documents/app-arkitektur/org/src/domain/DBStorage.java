@@ -1,10 +1,14 @@
 package src.domain;
+
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
+
 public class DBStorage implements Storage{
+
   private final static String DB_CON="jdbc:sqlite:movies.db";
   private static Connection con;
+
   static{
     try{
       Class.forName("org.sqlite.JDBC");
@@ -13,17 +17,22 @@ public class DBStorage implements Storage{
       System.err.println("Error getting connection to the database " + e.getMessage());
     }
   }
+
   public boolean hasConnection(){
     return con != null;
   }
+
   public void addMovie(Movie m){
     if(hasConnection()){
       try{
         Statement stm = null;
         String title = m.title();
         String genre = m.genre();
-        String sql = "INSERT INTO movies(title,genre) VALUES('" + title +
-        "','" + genre + "')";
+        int year = m.year();
+        String regi = m.regi();
+        String origin = m.origin();
+        String sql = "INSERT INTO movies(title,genre,year,regi,origin) VALUES('" + title +
+        "','" + genre + "',"+ year + ",'" + regi + "','" + origin +   "')";
         System.out.println(sql);
         stm = con.createStatement();
         stm.executeUpdate(sql);
@@ -33,6 +42,7 @@ public class DBStorage implements Storage{
       }
     }
   }
+
   public void addActor(Actor a){
     if(hasConnection()){
       try{
@@ -44,13 +54,14 @@ public class DBStorage implements Storage{
         System.out.println(sql);
         stm = con.createStatement();
         stm.executeUpdate(sql);
-      //  a.setId(rs.getInt("actor_id"));
+        //  a.setId(rs.getInt("actor_id"));
         System.out.println("the actor " + name + " has been successfully added");
       }catch(SQLException e){
         System.err.println("Error " + e.getMessage());
       }
     }
   }
+
   public List<Movie> showAllMovies(){
     List<Movie> allMovies = new ArrayList<>();
     try{
@@ -63,8 +74,9 @@ public class DBStorage implements Storage{
     }catch(Exception e){
       System.err.println("Error: " + e.getMessage());
     }
-   return allMovies;
+    return allMovies;
   }
+
   public List<Actor> showAllActors(){
     List<Actor> allActors = new ArrayList<>();
     try{
@@ -77,13 +89,50 @@ public class DBStorage implements Storage{
     }catch(Exception e){
       System.err.println("Error: " + e.getMessage());
     }
-   return allActors;
+    return allActors;
   }
+
+  public List<Movie> getMovieByTitle(String movieTitle){
+    List<Movie> movieByTitle = new ArrayList<>();
+    try{
+      String sql = "SELECT title,genre FROM movies WHERE title LIKE '" + movieTitle +"%'";
+      ResultSet rs = con.createStatement().executeQuery(sql);
+      while(rs.next()){
+        String title = rs.getString("title");
+        String genre = rs.getString("genre");
+        Movie m = new Movie(title, genre);
+        movieByTitle.add(m);
+      }
+    }catch(SQLException e){
+      System.err.println("Error: " + e.getMessage());
+      e.printStackTrace();
+    }
+    return movieByTitle;
+  }
+
+  public List<Actor> getActorByName(String actorName){
+    List<Actor> actorByName = new ArrayList<>();
+    try{
+      String sql = "SELECT name, sex FROM actors WHERE name LIKE '" + actorName +"%'";
+      ResultSet rs = con.createStatement().executeQuery(sql);
+      while(rs.next()){
+        String name = rs.getString("name");
+        String sex = rs.getString("sex");
+        Actor a = new Actor(name, sex);
+        actorByName.add(a);
+      }
+    }catch(SQLException e){
+      System.err.println("Error: " + e.getMessage());
+      e.printStackTrace();
+    }
+    return actorByName;
+  }
+
   public List<Movie> getMoviesByActorName(String actorName){
     List<Movie> moviesByActor = new ArrayList<>();
     try{
-     String sql = "SELECT title,genre FROM movies NATURAL JOIN actors_movies "+
-      "NATURAL JOIN actors WHERE actors.name='" + actorName +"'";
+      String sql = "SELECT title,genre FROM movies NATURAL JOIN actors_movies "+
+      "NATURAL JOIN actors WHERE actors.name LIKE '" + actorName +"%'";
       ResultSet rs = con.createStatement().executeQuery(sql);
       while(rs.next()){
         String title=rs.getString("title");
@@ -97,11 +146,12 @@ public class DBStorage implements Storage{
     }
     return moviesByActor;
   }
+
   public List<Actor> getActorsByMovieTitle(String movieTitle){
     List<Actor> actorsByMovie = new ArrayList<>();
     try{
       String sql = "SELECT name, sex FROM movies NATURAL JOIN actors_movies "+
-      "NATURAL JOIN actors WHERE movies.title='" + movieTitle + "'";
+      "NATURAL JOIN actors WHERE movies.title LIKE '" + movieTitle + "%'";
       ResultSet rs = con.createStatement().executeQuery(sql);
       while(rs.next()){
         String name = rs.getString("name");
@@ -114,6 +164,7 @@ public class DBStorage implements Storage{
     }
     return actorsByMovie;
   }
+
   public void deleteMovie(String title){
     try{
       int id = 0;
@@ -122,7 +173,7 @@ public class DBStorage implements Storage{
       if(rs.next()){
         //Movie m = new Movie(rs.getString("title"), rs.getString("genre"));
         id = rs.getInt("movie_id");
-      //  ResultSet r = con.createStatement().executeQuery("SELECT movie_id from movies where title='" + m.title() + "'");
+        //  ResultSet r = con.createStatement().executeQuery("SELECT movie_id from movies where title='" + m.title() + "'");
         String delete="DELETE FROM movies WHERE movie_id='" + id + "'";
         con.createStatement().executeUpdate(delete);
         con.createStatement().executeUpdate("DELETE FROM actors_movies WHERE movie_id='" + id + "'");
@@ -135,6 +186,7 @@ public class DBStorage implements Storage{
       System.err.println("Error: " + e.getMessage());
     }
   }
+
   public void deleteActor(String name){
     try{
       int id = 0;
@@ -154,25 +206,26 @@ public class DBStorage implements Storage{
       System.err.println("Error " + e.getMessage());
     }
   }
-  public int inlogg(String username, String password){
+
+  public int logIn(String username, String password){
     int result = 0;
     try{
       String sql="SELECT admin_id FROM admins WHERE username='" + username+
       "' AND password='" + password + "'";
       ResultSet rs = con.createStatement().executeQuery(sql);
       if(rs.next()){
-      result = rs.getInt("admin_id");
+        result = rs.getInt("admin_id");
         //System.out.println(result);
-    /*  }
-      else{
+        /*  }
+        else{
         result = false;
         System.out.println(result);
       } */
-      }
-    }catch(SQLException|NullPointerException e){
-      //System.err.println("Error :" + e.getMessage());
-      System.err.println("there is an err");
     }
-    return result;
+  }catch(SQLException|NullPointerException e){
+    //System.err.println("Error :" + e.getMessage());
+    System.err.println("there is an err");
   }
+  return result;
+}
 }
