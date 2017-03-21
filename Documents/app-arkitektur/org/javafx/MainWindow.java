@@ -232,7 +232,6 @@ public class MainWindow extends Application{
   */
   private void getFileMenuItem(String name, Storage storage){
 
-    //There is probably a better more general solution to this. Will most certainly change after use of tableviews
     if (name.equals("MOVIE")){
       showAllmovies = new MenuItem("Show all movies");
       showAllmovies.setOnAction( e -> {
