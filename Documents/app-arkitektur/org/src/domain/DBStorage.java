@@ -44,20 +44,22 @@ public class DBStorage implements Storage{
   }
 
   public void addActor(Actor a){
-    if(hasConnection()){
+      if(hasConnection()){
       try{
         Statement stm = null;
         String name = a.name();
         String sex = a.sex();
-        String sql = "INSERT INTO actors(name,sex) VALUES('" + name +
-        "','" + sex + "')";
+        String nationality = a.nationality();
+        String born = a.born();
+        String sql = "INSERT INTO actors(name,sex,nationality,born) VALUES('" + name +
+        "','" + sex + "','"+ nationality + "','" + born + "')";
         System.out.println(sql);
         stm = con.createStatement();
         stm.executeUpdate(sql);
-        //  a.setId(rs.getInt("actor_id"));
+      //  a.setId(rs.getInt("actor_id"));
         System.out.println("the actor " + name + " has been successfully added");
       }catch(SQLException e){
-        System.err.println("Error " + e.getMessage());
+        Alerts.display("Wrong" ,"date format incorrect");
       }
     }
   }
