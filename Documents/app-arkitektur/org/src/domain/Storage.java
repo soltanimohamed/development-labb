@@ -17,4 +17,5 @@ public interface Storage{
   public int logIn(String username, String password);
 
   public ResultSet getActorByNameRS(String actorName);
+  public ResultSet getMovieByTitleRS(String movieTitle);
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class DBStorage implements Storage{
 
-  private final static String DB_CON="jdbc:sqlite:movies.db";
+  private final static String DB_CON="jdbc:sqlite:movies2.db";
   private static Connection con;
 
   static{
@@ -125,7 +125,7 @@ public class DBStorage implements Storage{
   public ResultSet getMovieByTitleRS(String movieTitle){
     ResultSet rs = null;
     try{
-      String sql = "SELECT title, FROM movies WHERE title LIKE '" + movieTitle +"%'";
+      String sql = "SELECT title, genre, year, regi, origin FROM movies WHERE title LIKE '" + movieTitle +"%'";
       rs = con.createStatement().executeQuery(sql);
     }catch(SQLException e){
       System.err.println("Error: " + e.getMessage());
