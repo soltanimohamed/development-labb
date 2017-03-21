@@ -48,8 +48,8 @@ public class SearchResultTable {
             switch (variety) {
               case 1: rs = storage.getActorByNameRS(searchCriteria);
               break;
-              //case 2: rs = storage.getMovieByTitleRS(searchCriteria);
-              //break;
+              case 2: rs = storage.getMovieByTitleRS(searchCriteria);
+              break;
               default: rs = null; //ugly and unsafe FIX!
             }
 

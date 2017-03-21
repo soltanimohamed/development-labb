@@ -235,19 +235,10 @@ public class MainWindow extends Application{
     //There is probably a better more general solution to this. Will most certainly change after use of tableviews
     if (name.equals("MOVIE")){
       showAllmovies = new MenuItem("Show all movies");
-      /*showAllmovies.setOnAction( e -> {
-        List<Movie> allMovies = storage.showAllMovies();
-        List<String> movies = new ArrayList<>();
-        int i = 1;
-        for(Movie m : allMovies){
-          movies.add(m.title());
-          i++;
-        }
-        list.getItems().clear();
-        for(String s : movies){
-          list.getItems().add(s);
-        }
-      });*/
+      showAllmovies.setOnAction( e -> {
+        searchResultTable = (new SearchResultTable(storage)).buildData("", 2);
+        mainPane.setCenter(searchResultTable);
+      });
     }else{
       showAllactors = new MenuItem("Show all actors");
       showAllactors.setOnAction( e -> {
