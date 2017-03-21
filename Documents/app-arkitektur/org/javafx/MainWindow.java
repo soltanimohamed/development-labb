@@ -22,8 +22,10 @@ import java.net.*;
 public class MainWindow extends Application{
 
   private TextField searchField;
-  private Button searchButton, clearResultButton, submitButton;
-  private Menu fileMenu, editMenu, sortMenu;
+  private Button searchActorButton, searchMovieButton, clearResultButton, submitButton;
+  //private Button searchButton;
+  private Menu fileMenu, editMenu;
+  //private Menu sortMenu;
   private MenuItem showAllmovies;
   private MenuItem showAllactors;
   private MenuItem addMovie;
@@ -85,6 +87,7 @@ public class MainWindow extends Application{
     fileMenu.getItems().add(new SeparatorMenuItem());
     fileMenu.getItems().add(exitApplication);
 
+
     //Making edit menu items
     editMenu = new Menu("Edit");
     getEditMenuItem("MOVIE", storage);
@@ -97,6 +100,7 @@ public class MainWindow extends Application{
     editMenu.getItems().add(addActor);
     editMenu.getItems().add(deleteActor);
 
+/*
     //Sort menu initiation, not done..
     sortMenu = new Menu("Sort");
     action = new MenuItem("Action");
@@ -108,12 +112,13 @@ public class MainWindow extends Application{
     sortMenu.getItems().add(drama);
     sortMenu.getItems().add(horror);
     //sortMenu.getItems().add(new SeperatorMenuItem());
+    */
 
     //Adding the whole caboodle to the menubar
     MenuBar menubar = new MenuBar();
     menubar.getMenus().addAll(fileMenu);
     menubar.getMenus().addAll(editMenu);
-    menubar.getMenus().addAll(sortMenu);
+    //menubar.getMenus().addAll(sortMenu);
     mainPane.setLeft(pane3);
 
     clearResultButton = new Button("Clear result");
@@ -163,15 +168,33 @@ public class MainWindow extends Application{
 
     pane3.setConstraints(searchField, 0, 0);
 
+    searchActorButton = new Button("search actor");
+    searchActorButton.setOnAction( e ->{
+      String input =searchField.getText();
+      searchResultTable = (new SearchResultTable(storage)).buildData(input, 1); //just actor for the moment
+      mainPane.setCenter(searchResultTable);
+    });
+
+    searchMovieButton = new Button("search movie");
+    searchMovieButton.setOnAction( e ->{
+      String input =searchField.getText();
+      searchResultTable = (new SearchResultTable(storage)).buildData(input, 2); //just actor for the moment
+      mainPane.setCenter(searchResultTable);
+    });
+
+/*
     searchButton = new Button("search");
     searchButton.setOnAction( e ->{
       String input =searchField.getText();
       searchResultTable = (new SearchResultTable(storage)).buildData(input, 1); //just actor for the moment
       mainPane.setCenter(searchResultTable);
     });
-
-    pane3.setConstraints(searchButton, 0, 1);
-    pane3.getChildren().addAll(searchField,searchButton);
+*/
+    pane3.setConstraints(searchActorButton, 0, 1);
+    pane3.setConstraints(searchMovieButton,0, 2);
+    //pane3.setConstraints(searchButton, 0, 1);
+    pane3.getChildren().addAll(searchField,searchActorButton,searchMovieButton);
+    //pane3.getChildren().addAll(searchField,searchButton);
     mainPane.setTop(menubar);
     Scene scene = new Scene(mainPane, 600,500);
     scene.getStylesheets().add("javafx/style.css");
