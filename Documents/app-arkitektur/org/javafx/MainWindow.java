@@ -38,6 +38,7 @@ public class MainWindow extends Application{
   private MenuItem horror;
   private Button loginButton, logoutButton;
   private ListView<String> list;
+  private TableView searchResultTable;
   private BorderPane mainPane;
   private GridPane pane1;
   private GridPane pane2;
@@ -116,7 +117,11 @@ public class MainWindow extends Application{
     mainPane.setLeft(pane3);
 
     clearResultButton = new Button("Clear result");
-    clearResultButton.setOnAction( e ->list.getItems().clear());
+    clearResultButton.setOnAction( e -> {
+      searchResultTable = new TableView();
+      mainPane.setCenter(searchResultTable);
+    });
+
 
     submitButton = new Button("Submit");
     submitButton.setOnAction( e ->{
@@ -142,7 +147,8 @@ public class MainWindow extends Application{
     pane1.setConstraints(clearResultButton,1,0);
     pane1.getChildren().addAll(submitButton,clearResultButton);
     mainPane.setBottom(pane1);
-    mainPane.setCenter(list);
+    mainPane.setCenter(new TableView());
+    if(mainPane.getCenter()!=null){System.out.println("NOT EMPTY");}else{System.out.println("EMPTY");}
     pane3.setPadding(new Insets(10,10,10,10));
     pane3.setVgap(8);
     pane3.setHgap(10);
@@ -151,19 +157,8 @@ public class MainWindow extends Application{
     searchField.setPromptText("movie or actor");
     searchField.setOnAction( e ->{
       String input =searchField.getText();
-      List<Movie> movies = storage.getMoviesByActorName(input);
-      List<Actor> actors = storage.getActorsByMovieTitle(input);
-      List<String> result = new ArrayList<>();
-      for(Actor a : actors){
-        result.add(a.name());
-      }
-      for(Movie m :movies){
-        result.add(m.title());
-      }
-      list.getItems().clear();
-      for(String s : result){
-        list.getItems().add(s);
-      }
+      searchResultTable = (new SearchResultTable(storage)).buildData(input, 1); //just actor for the moment
+      mainPane.setCenter(searchResultTable);
     });
 
     pane3.setConstraints(searchField, 0, 0);
@@ -171,19 +166,8 @@ public class MainWindow extends Application{
     searchButton = new Button("search");
     searchButton.setOnAction( e ->{
       String input =searchField.getText();
-      List<Movie> movies = storage.getMoviesByActorName(input);
-      List<Actor> actors = storage.getActorsByMovieTitle(input);
-      List<String> result = new ArrayList<>();
-      for(Actor a : actors){
-        result.add(a.name());
-      }
-      for(Movie m :movies){
-        result.add(m.title());
-      }
-      list.getItems().clear();
-      for(String s : result){
-        list.getItems().add(s);
-      }
+      searchResultTable = (new SearchResultTable(storage)).buildData(input, 1); //just actor for the moment
+      mainPane.setCenter(searchResultTable);
     });
 
     pane3.setConstraints(searchButton, 0, 1);
@@ -251,7 +235,7 @@ public class MainWindow extends Application{
     //There is probably a better more general solution to this. Will most certainly change after use of tableviews
     if (name.equals("MOVIE")){
       showAllmovies = new MenuItem("Show all movies");
-      showAllmovies.setOnAction( e -> {
+      /*showAllmovies.setOnAction( e -> {
         List<Movie> allMovies = storage.showAllMovies();
         List<String> movies = new ArrayList<>();
         int i = 1;
@@ -263,21 +247,12 @@ public class MainWindow extends Application{
         for(String s : movies){
           list.getItems().add(s);
         }
-      });
+      });*/
     }else{
       showAllactors = new MenuItem("Show all actors");
       showAllactors.setOnAction( e -> {
-        List<Actor> allActors = storage.showAllActors();
-        List<String> actors = new ArrayList<>();
-        int i = 1;
-        for(Actor a : allActors){
-          actors.add(i + ": " + a.name());
-          i++;
-        }
-        list.getItems().clear();
-        for(String s : actors){
-          list.getItems().add(s);
-        }
+        searchResultTable = (new SearchResultTable(storage)).buildData("", 1);
+        mainPane.setCenter(searchResultTable);
       });
     }
   }
@@ -309,7 +284,7 @@ public class MainWindow extends Application{
       addActor.setOnAction( e ->{
         new AddActor(storage);
       });
-            
+
       deleteActor = new MenuItem("Delete actor");
       deleteActor.setOnAction( e ->{
         new DeleteEntryView(storage, name);
