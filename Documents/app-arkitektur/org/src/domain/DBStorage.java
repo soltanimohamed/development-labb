@@ -62,7 +62,7 @@ public class DBStorage implements Storage{
     }
   }
 
-  public List<Movie> showAllMovies(){
+  /*public List<Movie> showAllMovies(){
     List<Movie> allMovies = new ArrayList<>();
     try{
       String sql = "SELECT title, genre FROM movies";
@@ -75,9 +75,9 @@ public class DBStorage implements Storage{
       System.err.println("Error: " + e.getMessage());
     }
     return allMovies;
-  }
+  }*/
 
-  public List<Actor> showAllActors(){
+  /*public ResultSet showAllActors(){
     List<Actor> allActors = new ArrayList<>();
     try{
       String sql = "SELECT name, sex FROM actors";
@@ -90,9 +90,9 @@ public class DBStorage implements Storage{
       System.err.println("Error: " + e.getMessage());
     }
     return allActors;
-  }
+  }*/
 
-  public List<Movie> getMovieByTitle(String movieTitle){
+/*  public List<Movie> getMovieByTitle(String movieTitle){
     List<Movie> movieByTitle = new ArrayList<>();
     try{
       String sql = "SELECT title,genre FROM movies WHERE title LIKE '" + movieTitle +"%'";
@@ -108,9 +108,33 @@ public class DBStorage implements Storage{
       e.printStackTrace();
     }
     return movieByTitle;
+  }*/
+
+  public ResultSet getActorByNameRS(String actorName){
+    ResultSet rs = null;
+    try{
+      String sql = "SELECT name, sex, nationality, born FROM actors WHERE name LIKE '" + actorName +"%'";
+      rs = con.createStatement().executeQuery(sql);
+    }catch(SQLException e){
+      System.err.println("Error: " + e.getMessage());
+      e.printStackTrace();
+    }
+    return rs;
   }
 
-  public List<Actor> getActorByName(String actorName){
+  public ResultSet getMovieByTitleRS(String movieTitle){
+    ResultSet rs = null;
+    try{
+      String sql = "SELECT title, FROM movies WHERE title LIKE '" + movieTitle +"%'";
+      rs = con.createStatement().executeQuery(sql);
+    }catch(SQLException e){
+      System.err.println("Error: " + e.getMessage());
+      e.printStackTrace();
+    }
+    return rs;
+  }
+
+  /*public List<Actor> getActorByName(String actorName){
     List<Actor> actorByName = new ArrayList<>();
     try{
       String sql = "SELECT name, sex FROM actors WHERE name LIKE '" + actorName +"%'";
@@ -126,7 +150,7 @@ public class DBStorage implements Storage{
       e.printStackTrace();
     }
     return actorByName;
-  }
+  }*/
 
   public List<Movie> getMoviesByActorName(String actorName){
     List<Movie> moviesByActor = new ArrayList<>();
@@ -221,11 +245,11 @@ public class DBStorage implements Storage{
         result = false;
         System.out.println(result);
       } */
+      }
+    }catch(SQLException|NullPointerException e){
+      //System.err.println("Error :" + e.getMessage());
+      System.err.println("there is an err");
     }
-  }catch(SQLException|NullPointerException e){
-    //System.err.println("Error :" + e.getMessage());
-    System.err.println("there is an err");
+    return result;
   }
-  return result;
-}
 }
