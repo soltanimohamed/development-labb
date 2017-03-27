@@ -55,7 +55,10 @@ public class DeleteEntryView{
     TextField titleField = new TextField();
     Button okButton = new Button("ok");
     okButton.setOnAction( e ->{
-      if(!(titleField.getText().equals(""))){
+      if((toBeDeleted.equalsIgnoreCase("MOVIE")&&!(titleField.getText().equals("")))){
+        storage.deleteMovie(titleField.getText());
+        window.close();
+      }else if(!(titleField.getText().equals(""))){
         storage.deleteActor(titleField.getText());
         window.close();
       }
